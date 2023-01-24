@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
-const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app';
+const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app/';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
@@ -16,18 +16,18 @@ bot.on('message', async (msg) => {
     const text = msg.text;
 
     if(text === '/start') {
-        // await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
-        //     reply_markup: {
-        //         keyboard: [
-        //             [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
-        //         ]
-        //     }
-        // })
+        await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
+            reply_markup: {
+                keyboard: [
+                    [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
+                ]
+            }
+        })
 
         await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
-                keyboard: [
-                    [{text: 'Открыть каталог', web_app: {url: webAppUrl}}]
+                inline_keyboard: [
+                    [{text: 'Сделать заказ', web_app: {url: webAppUrl}}]
                 ]
             }
         })
@@ -61,12 +61,9 @@ app.post('/web-data', async (req, res) => {
                 message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
             }
         })
-        await bot.sendMessage(chatId, 'Сработало!')
         return res.status(200).json({});
     } catch (e) {
-        await bot.sendMessage(chatId, e)        
         return res.status(500).json({})
-        
     }
 })
 
