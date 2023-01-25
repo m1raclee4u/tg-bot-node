@@ -64,6 +64,7 @@ app.post('http://77.244.221.114:8000/get', async (req, res) => {
         })
         return res.status(200).json({});
     } catch (e) {
+        await bot.sendMessage(chatId, 'Спасибо за обратную связь!')
         return res.status(500).json({})
     }
 })
