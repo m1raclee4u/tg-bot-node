@@ -51,7 +51,7 @@ bot.on('message', async (msg) => {
     }
 });
 
-app.post('http://77.244.221.114:8000/get', async (req, res) => {
+app.post('/web-data', async (req, res) => {
     const {queryId, products = [], totalPrice} = req.body;
     try {
         await bot.answerWebAppQuery(queryId, {
