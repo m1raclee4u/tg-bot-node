@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
-const webAppUrl = 'http://m904214y.beget.tech/';
+const webAppUrl = 'http://m904214y.beget.tech';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
