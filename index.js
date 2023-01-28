@@ -20,6 +20,10 @@ const options = {
 };
 
 
+http.createServer(app).listen(8000);
+// Create an HTTPS service identical to the HTTP service.
+https.createServer(options, app).listen(8443);
+
 app.use(express.json());
 app.use(cors());
 
@@ -77,8 +81,5 @@ app.post('/web-data', async (req, res) => {
     res.status(200).json({});    
 })
 
-http.createServer(app).listen(8000);
-// Create an HTTPS service identical to the HTTP service.
-https.createServer(options, app).listen(8443);
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
