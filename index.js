@@ -77,6 +77,8 @@ app.post('/web-data', async (req, res) => {
     res.status(200).json({});    
 })
 
+const PORT = 8080;
+
 https.createServer(options, (req, res) => {
     res.writeHead(200);
     res.end(`hello world\n`);
