@@ -6,10 +6,6 @@ const https = require('https');
 const http = require('http');
 const fs = require('fs');
 
-
-
-
-
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
 const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app/';
 
@@ -23,10 +19,6 @@ const options = {
   cert: fs.readFileSync(`${certDir}/${domain}/fullchain.pem`)
 };
 
-https.createServer(options, (req, res) => {
-    res.writeHead(200);
-    // res.end(`hello world\n`);
-  }).listen(8000);
 
 app.use(express.json());
 app.use(cors());
@@ -85,6 +77,10 @@ app.post('/web-data', async (req, res) => {
     res.status(200).json({});    
 })
 
-const PORT = 8080;
+https.createServer(options, (req, res) => {
+    res.writeHead(200);
+    res.end(`hello world\n`);
+  }).listen(8000);
+
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
