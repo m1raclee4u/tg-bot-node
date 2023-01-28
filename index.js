@@ -6,11 +6,6 @@ const https = require('https');
 const http = require('http');
 const fs = require('fs');
 
-// This line is from the Node.js HTTPS documentation.
-var options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/webapptelegram.hopto.org/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/webapptelegram.hopto.org/fullchain.pem')
-};
 
 
 
@@ -21,10 +16,17 @@ const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app/';
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
 
-// Create an HTTP service.
-http.createServer(app).listen(80);
-// Create an HTTPS service identical to the HTTP service.
-https.createServer(options, app).listen(443);
+const certDir = `/etc/letsencrypt/live`;
+const domain = `webapptelegram.hopto.org`;
+const options = {
+  key: fs.readFileSync(`${certDir}/${domain}/privkey.pem`),
+  cert: fs.readFileSync(`${certDir}/${domain}/fullchain.pem`)
+};
+
+https.createServer(options, (req, res) => {
+    res.writeHead(200);
+    res.end(`hello world\n`);
+  }).listen(8080);
 
 app.use(express.json());
 app.use(cors());
@@ -83,6 +85,6 @@ app.post('/web-data', async (req, res) => {
     res.status(200).json({});    
 })
 
-const PORT = 8080;
+// const PORT = 8080;
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
