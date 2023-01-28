@@ -62,6 +62,20 @@ bot.on('message', async (msg) => {
     }
 });
 
+app.post('/web-filter', async (req, res) => {
+    const {queryId, os, maxPrice, model} = req.body;
+    bot.answerWebAppQuery(queryId, {
+            type: 'article',
+            id: queryId,
+            title: 'Вы выбрали',
+            input_message_content: {
+                message_text: ` Операционная система: ${os}, Максимальная цена: ${maxPrice}, Производитель: ${model}`
+            }
+            
+        })
+    res.status(200).json({});    
+})
+
 app.post('/web-data', async (req, res) => {
     const {queryId, products = [], totalPrice} = req.body;
     bot.answerWebAppQuery(queryId, {
