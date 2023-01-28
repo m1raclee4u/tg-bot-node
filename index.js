@@ -26,7 +26,7 @@ const options = {
 https.createServer(options, (req, res) => {
     res.writeHead(200);
     res.end(`hello world\n`);
-  }).listen(8080);
+  }).listen(8000);
 
 app.use(express.json());
 app.use(cors());
@@ -85,6 +85,6 @@ app.post('/web-data', async (req, res) => {
     res.status(200).json({});    
 })
 
-// const PORT = 8080;
+const PORT = 8080;
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
