@@ -23,13 +23,9 @@ const options = {
 app.use(express.json());
 app.use(cors());
 
-
-
-const PORT = 8080;
-
-https.createServer(options, (req, res) => {
-    
-  }).listen(8080);
+http.createServer(app).listen(80);
+// Create an HTTPS service identical to the HTTP service.
+https.createServer(options, app).listen(443);
 
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
