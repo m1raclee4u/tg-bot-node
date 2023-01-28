@@ -7,7 +7,7 @@ const http = require('http');
 const fs = require('fs');
 
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
-const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app/';
+const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
@@ -30,7 +30,7 @@ bot.on('message', async (msg) => {
         await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'Заполнить форму', web_app: {url: webAppUrl + 'form'}}]
+                    [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
                 ]
             }
         })
