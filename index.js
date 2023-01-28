@@ -29,7 +29,7 @@ bot.on('message', async (msg) => {
     if(text === '/start') {
         await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
             reply_markup: {
-                keyboard: [
+                inline_keyboard: [
                     [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
                 ]
             }
@@ -37,7 +37,7 @@ bot.on('message', async (msg) => {
 
         await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
-                inline_keyboard: [
+                keyboard: [
                     [{text: 'Сделать заказ', web_app: {url: webAppUrl}}]
                 ]
             }
@@ -47,15 +47,15 @@ bot.on('message', async (msg) => {
     if(msg?.web_app_data?.data) {
         try {
             const data = JSON.parse(msg?.web_app_data?.data)
-            console.log(data)
+
             await bot.sendMessage(chatId, 'Спасибо за обратную связь!')
             await bot.sendMessage(chatId, 'Операционная система: ' + data?.os);
             await bot.sendMessage(chatId, 'Показывать товары до: ' + data?.maxPrice);
             await bot.sendMessage(chatId, 'Показывать модели: ' + data?.model);
 
-            setTimeout(async () => {
-                await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
-            }, 3000)
+            // setTimeout(async () => {
+            //     await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
+            // }, 3000)
         } catch (e) {
             console.log(e);
         }
