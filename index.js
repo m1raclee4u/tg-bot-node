@@ -2,11 +2,29 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+
+// This line is from the Node.js HTTPS documentation.
+var options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/webapptelegram.hopto.org/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/webapptelegram.hopto.org/fullchain.pem')
+};
+
+
+
+
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
-const webAppUrl = 'http://m904214y.beget.tech';
+const webAppUrl = 'https://marvelous-bunny-035f81.netlify.app/';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
+
+// Create an HTTP service.
+http.createServer(app).listen(80);
+// Create an HTTPS service identical to the HTTP service.
+https.createServer(options, app).listen(443);
 
 app.use(express.json());
 app.use(cors());
