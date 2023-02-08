@@ -83,10 +83,11 @@ app.post('/web-data', async (req, res) => {
         id: queryId,
         title: 'Успешная покупка',
         input_message_content: {
-            message_text: ` Поздравляю с покупкой, вы приобрели ${products.length} товар на сумму ${price}`
-        }
+            message_text: ` Поздравляю с вашим выбором, ${products.length}  на сумму ${price}`
+        }       
 
     })
+    bot.sendMessage('494388019', ` Хочет купить вот эти товары: ${products}`)
     res.status(200).json({});
 })
 
