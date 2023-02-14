@@ -2,9 +2,27 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
+require('dotenv').config();
+
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
+
+
+const { fetch } = require('undici')
+
+const Moysklad = require('moysklad')
+
+const ms = Moysklad({ fetch })
+
+const productsCollection = ms.GET('entity/product')
+
+productsCollection.then(function(result) {
+    console.log(result) // "Some User token"
+ })
+
+console.log(productsCollection);
+
 
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
 const webAppUrl = 'https://roaring-lollipop-ab88b5.netlify.app/';
@@ -12,6 +30,7 @@ const webAppUrl = 'https://roaring-lollipop-ab88b5.netlify.app/';
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
 
+// Сертификат
 // const certDir = `/etc/letsencrypt/live`;
 // const domain = `webapptelegram.hopto.org`;
 // const options = {
@@ -21,6 +40,20 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+
+// Через Авито
+// const osmosis = require('osmosis');
+
+// osmosis
+//     .get('https://www.avito.ru/user/5b326dfd4bf0d9606d4931a107859f56/profile?id=2840424375&src=item&page_from=100from_item_card&iid=2840424375')
+//     .find('#botstuff')
+//     .set({'related': ['.card-section .brs_col p a']})
+//     .data(function(data) {
+//         console.log(data);
+//     })
+
+
 
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
@@ -62,19 +95,6 @@ bot.on('message', async (msg) => {
     }
 });
 
-// app.post('/web-filter', async (req, res) => {
-//     const { queryId, os, maxPrice, model } = req.body;
-//     bot.answerWebAppQuery(queryId, {
-//         type: 'article',
-//         id: queryId,
-//         title: 'Вы выбрали',
-//         input_message_content: {
-//             message_text: ` Операционная система: ${os}, Максимальная цена: ${maxPrice}, Производитель: ${model}`
-//         }
-
-//     })
-//     res.status(200).json({});
-// })
 
 app.post('/web-data', async (req, res) => {
     const { queryId, products = [], price } = req.body;
