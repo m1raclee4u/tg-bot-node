@@ -2,33 +2,51 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
-require('dotenv').config();
-
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-
-
-const { fetch } = require('undici')
-
-const Moysklad = require('moysklad')
-
-const ms = Moysklad({ fetch })
-
-const productsCollection = ms.GET('entity/product')
-
-productsCollection.then(function(result) {
-    console.log(result) // "Some User token"
- })
-
-console.log(productsCollection);
-
 
 const token = '5784579104:AAEnhhHiT8GD3Fra4fH6102kbhYl-X2P7pI';
 const webAppUrl = 'https://roaring-lollipop-ab88b5.netlify.app/';
 
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
+
+const { fetch } = require('undici')
+const Moysklad = require('moysklad');
+const { response } = require('express');
+const ms = Moysklad({ fetch })
+
+require('dotenv').config();
+
+let g_products = []
+
+
+
+
+app.use(express.json());
+app.use(cors());
+
+
+const productsCollection = ms.GET('/report/stock/all')
+productsCollection.then(function (result) {
+    g_products.push(result)        
+})
+
+
+app.get('/products', async (req, res) => {
+    let nonNullSalePriceProducts = []
+    for (const item in g_products[0].rows) {
+        if (Object.hasOwnProperty.call(g_products[0].rows, item)) {
+            const element = g_products[0].rows[item];
+            if (element.salePrice != 0) {
+                nonNullSalePriceProducts.push(element)
+            }
+        }
+    }
+    res.status(200).json(nonNullSalePriceProducts)
+})
+
 
 // Сертификат
 // const certDir = `/etc/letsencrypt/live`;
@@ -37,9 +55,6 @@ const app = express();
 //   key: fs.readFileSync(`${certDir}/${domain}/privkey.pem`),
 //   cert: fs.readFileSync(`${certDir}/${domain}/fullchain.pem`)
 // };
-
-app.use(express.json());
-app.use(cors());
 
 
 // Через Авито
@@ -52,7 +67,6 @@ app.use(cors());
 //     .data(function(data) {
 //         console.log(data);
 //     })
-
 
 
 bot.on('message', async (msg) => {
@@ -86,15 +100,18 @@ bot.on('message', async (msg) => {
             await bot.sendMessage(chatId, 'Показывать товары до: ' + data?.maxPrice);
             await bot.sendMessage(chatId, 'Показывать модели: ' + data?.model);
 
-            // setTimeout(async () => {
-            //     await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
-            // }, 3000)
         } catch (e) {
             console.log(e);
         }
     }
 });
 
+app.post('/products', async (req, res) => {
+    // let res_product = []
+
+    // res.end(JSON.stringify(res_product)) 
+
+})
 
 app.post('/web-data', async (req, res) => {
     const { queryId, products = [], price } = req.body;
@@ -104,7 +121,7 @@ app.post('/web-data', async (req, res) => {
         title: 'Успешная покупка',
         input_message_content: {
             message_text: ` Поздравляю с вашим выбором, ${products.length}  на сумму ${price}`
-        }       
+        }
 
     })
     bot.sendMessage('494388019', ` Хочет купить вот эти товары: ${products}`)
@@ -112,8 +129,5 @@ app.post('/web-data', async (req, res) => {
 })
 
 const PORT = 8000;
-// http.createServer(app).listen(8000);
-// Create an HTTPS service identical to the HTTP service.
-// https.createServer(options, app).listen(8443);
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
